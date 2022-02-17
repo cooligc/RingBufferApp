@@ -1,6 +1,7 @@
 package com.skc.ringbuffer;
 
 import com.lmax.disruptor.BusySpinWaitStrategy;
+import com.lmax.disruptor.EventHandler;
 import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.WaitStrategy;
 import com.lmax.disruptor.dsl.Disruptor;
@@ -35,12 +36,12 @@ public class RingBufferAppApplication implements CommandLineRunner {
 				threadFactory,
 				ProducerType.SINGLE,
 				waitStrategy);
-		disruptor.handleEventsWith(new SingleEventConsumer().getEventHandler());
+		disruptor.handleEventsWith(new SingleEventConsumer(), new SecondEventHandler());
 
 		RingBuffer<AppEvent> ringBuffer = disruptor.start();
 
 
-		for (int eventCount = 0; eventCount < 32; eventCount++) {
+		for (int eventCount = 0; eventCount < 8; eventCount++) {
 
 			Map<String,String> data = new HashMap<>();
 			data.put("hello","hi"+eventCount);
